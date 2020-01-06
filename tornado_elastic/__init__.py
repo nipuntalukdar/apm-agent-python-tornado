@@ -3,7 +3,7 @@ from tornado.web import RequestHandler
 
 import elasticapm
 from elasticapm.base import Client
-from .utils import get_data_from_request, get_data_from_response
+from elasticapm.contrib.tornado.utils import get_data_from_request, get_data_from_response
 
 
 def make_client(client_cls, app, **defaults):
@@ -49,17 +49,13 @@ class TornadoApm(object):
 
 class ApiElasticHandlerAPM(RequestHandler):
 
-    @staticmethod
-    def __parser_url(router):
-        group_index = sorted(list(router.matcher.regex.groupindex.values()))
-        tuple_url = ()
-        url = getattr(router.matcher, '_path')
-        for param in group_index:
-            for key, value in router.matcher.regex.groupindex.items():
-                if value == param:
-                    tuple_url += (":" + key,)
-                    break
-        return url % tuple_url
+    def __parser_url(self, router):
+        # Take only the first 4 tokens in the URL path
+        try:
+            path_elems = [a for a in self.request.uri.split('/',5) if a]
+            return '/{}'.format('/'.join(path_elems[:4]))
+        except:
+            return self.request.uri
 
     def capture_exception(self):
         apm_elastic = self.settings.get("apm_elastic")
