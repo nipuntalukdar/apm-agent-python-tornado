@@ -17,11 +17,13 @@ reqs = [package.strip('\n') for package in packages]
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='tornado_elastic',
+    name='tornado_elastic2',
     version='0.0.1',
     description='Project Apm Elastic for tornado-framework',
     author='Neighbors LTDA',
     author_email='laerte.allan@gmail.com',
+    maintainer='Nipun',
+    maintainer_email='nipunmlist@gmail.com',
 
     classifiers=[  # Optional
 
@@ -29,6 +31,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
         'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
@@ -36,10 +39,10 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     include_package_data=True,
-    package_dir={here: 'tornado_elastic'},
+    package_dir={here: 'tornado_elastic2'},
     keywords='sample setuptools development',
     packages=find_packages(here, exclude=['contrib', 'docs', 'tests', 'main.py', 'requirements-dev.txt']),
-    package_data={'tornado_elastic': ['*']},
+    package_data={'tornado_elastic2': ['*']},
     install_requires=reqs,  # Optional
 
 )
