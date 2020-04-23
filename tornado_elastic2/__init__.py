@@ -61,7 +61,8 @@ class ApiElasticHandlerAPM(RequestHandler):
         apm_elastic = self.settings.get("apm_elastic")
         apm_elastic.client.capture_exception(
             context={
-                "request": get_data_from_request(self.request)
+                "request": get_data_from_request(self.request,capture_body=False,
+                                                capture_headers=True)
             },
             handled=False,
         )
@@ -90,8 +91,11 @@ class ApiElasticHandlerAPM(RequestHandler):
         name_trasaction = '{} {}'.format(self.request.method, self.get_url())
         status = self.get_status()
         result = 'HTTP {}xx'.format(status // 100)
-        data_request = get_data_from_request(self.request)
-        data_response = get_data_from_response(self)
+        c_body = apm_elastic.client.config.capture_body in ("transactions", "all")
+        data_request = get_data_from_request(self.request, capture_body=c_body,
+                    capture_headers=apm_elastic.client.config.capture_headers)
+        data_response = get_data_from_response(self,
+                        capture_headers=apm_elastic.client.config.capture_headers)
         elasticapm.set_context(lambda: data_request, "request")
         elasticapm.set_context(lambda: data_response, "response")
         elasticapm.set_transaction_name(name_trasaction, override=False)
